@@ -20,6 +20,7 @@
 		public function returnMessage(){
 			$return = null;
 			try{
+				
 				$return = json_decode(file_get_contents("php://input"), false, 512, JSON_BIGINT_AS_STRING);
 			}
 			catch(PDOException $e){
