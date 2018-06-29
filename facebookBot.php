@@ -119,7 +119,7 @@ if($message){
 				if($sender !== $idPage){
 					if($mex->postback){
 						$playback = @$mex->postback->playback;
-						$bot->replyMessage($playback)
+						$bot->replyMessage($playback);
 					}
 					else if($mex->message){
 						$messages = $mex->message->text;
