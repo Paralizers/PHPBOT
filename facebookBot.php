@@ -1,6 +1,5 @@
 <?php
 
-error_reporting(E_ERROR);
 	class botFacebook{
 		const BASE_URL_APIFB = 'https://graph.facebook.com/v2.6/';
 		private $configMessage = ['test' => "Ciao"];
@@ -32,8 +31,9 @@ error_reporting(E_ERROR);
 		public function replyMessage($mex){
 			$return = null;
 			if($mex && $mex = strtolower($mex) && $return =  $this->configMessage[$mex]){
-				return $return;
+				
 			}
+			return $return;
 		}
 		private static function executePost($url, $parameters, $json = false){
 			$ch = curl_init();
@@ -57,14 +57,15 @@ error_reporting(E_ERROR);
 		
 		public function sendTextMessage($recipientId, $text){
 			$url = self::BASE_URL_APIFB . "me/messages?access_token=%s";
+			
 			$url = sprintf($url, $this->pageToken);
-			$recipient = new \stdClass();
-			$recipient->id = $recipientId;
-			$message = new \stdClass();
-			$message->text = $text;
-			$parameters = ['recipient' => $recipient, 'message' => $message];
+			$parameters = [];
+			$parameters["recipient"]["id"] = $recipientId;
+			$parameters["message"]["text"] = $text;
+		
 			$response = self::executePost($url, $parameters, true);
 			if ($response) {
+				echo $response;
 				$responseObject = json_decode($response);
 				return is_object($responseObject) && isset($responseObject->recipient_id) && isset($responseObject->message_id);
 			}
@@ -78,14 +79,20 @@ $message = $bot->returnMessage();
 if($message){
 	file_put_contents("test.txt",json_encode($message));
 	try{
-	if($message["object"] == "page"){
-		$entry = $message["entry"];
+	if($message->object == "page"){
+		$entry = $message->entry;
 		foreach($entry as $en){
-			$idPage = $en["id"];
-			$mex = $en["messaging"];
-			$sender = $mex["sender"];
-			if($sender !== $idPage){
-				self::sendTextMessage($sender,"ciao");
+			$idPage = $en->id;
+			$mexs = $en->messaging;
+			foreach($mexs as $mex){
+				$sender = $mex->sender->id;
+				if($sender !== $idPage){
+					$messages = $mex->message->text;
+					$sendMessage = self::replyMessage($messages);
+					if($sendMessage){
+						$bot->sendTextMessage($sender,$sendMessage);
+					}
+				}
 			}
 		}
 		
