@@ -16,9 +16,20 @@ error_reporting(E_ERROR);
 					exit;
 				}
 			}
-		public function returnBot(){
-			return file_get_contents("php://input");
+			return false;
+		public function returnMessage(){
+			$return = null;
+			try{
+				$return = json_decode(file_get_contents("php://input"), false, 512, JSON_BIGINT_AS_STRING)
+			}
+			catch(PDOException $e){
+				$return = null;
+			}
+			return $return;
 		}
 	}
-$a = new botFacebook("test1234","");
-file_put_contents("test.txt",$a->returnBot());
+$bot = new botFacebook("test1234","");
+$message = $bot->returnMessage();
+if($message){
+	file_put_contents("test.txt",json_encode($message));
+}
