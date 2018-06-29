@@ -20,6 +20,5 @@ error_reporting(E_ERROR);
 			return file_get_contents("php://input");
 		}
 	}
-$a = new botFacebook();
-
+$a = new botFacebook("test1234","");
 file_put_contents("test.txt",$a->returnBot());
