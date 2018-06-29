@@ -48,6 +48,9 @@
 			if($mex && $mex = strtolower($mex) && @$return = $this->configMessage[$mex] && ! is_callable($return)){
 				
 			}
+			else if($return && is_callable($return)){
+				$return();
+			}
 			return $return;
 		}
 		private static function executePost($url, $parameters, $json = false){
