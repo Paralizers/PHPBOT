@@ -6,10 +6,14 @@
 		'sito' => "Al seguente indirizzo: https://www.relaxtraveltours.com/ , potrai trovare il nostro sito web.");
 		private $valToken;
 		private $pageToken;
+		public function getUsers ($id){
+			$return = [];
+			$return["last_access"] = time();
+			$return["contact_operator"] = false;
+		}
 		public function __construct($val,$page){
 			$this->configMessage['prova'] = function(){
 			$url = self::BASE_URL_APIFB . "me/messages?access_token=%s";
-			
 			$url = sprintf($url, $this->pageToken);
 			$parameters = [];
 			$parameters["recipient"]["id"] = $this->recipientId;
@@ -22,6 +26,9 @@
 			$parameters["message"]["attachment"]["payload"]["buttons"][] = ["type" => "phone_number","title" => "Chiama operatore","payload" => "+3908133333333"];
 			self::executePost($url,$parameters);
 		};
+			$this->configMessage['contact_operator'] = function(){
+				self::sendTextMessage($this->recipientId, "Il bot è stato disattivato, un operatore ti contatterà il prima possibile");
+			};
 			$this->valToken = $val;
 			$this->pageToken = $page;
 			self::setupWebhook();
@@ -110,11 +117,17 @@ if($message){
 			foreach($mexs as $mex){
 				$sender = $mex->sender->id;
 				if($sender !== $idPage){
-					$messages = $mex->message->text;
-					$bot->recipientId = $sender;
-					$sendMessage = $bot->replyMessage($messages);
-					if($sendMessage){
-						$bot->sendTextMessage($sender,$sendMessage);
+					if($mex->postback){
+						$playback = @$mex->postback->playback;
+						$bot->replyMessage($playback)
+					}
+					else if($mex->message){
+						$messages = $mex->message->text;
+						$bot->recipientId = $sender;
+						$sendMessage = $bot->replyMessage($messages);
+						if($sendMessage){
+							$bot->sendTextMessage($sender,$sendMessage);
+						}
 					}
 				}
 			}
