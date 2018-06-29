@@ -1,2 +1,2 @@
 <?php
-// silence is golden
+file_put_contents("prova.txt","testo");
