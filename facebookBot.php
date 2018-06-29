@@ -31,7 +31,7 @@
 		
 		public function replyMessage($mex){
 			$return = null;
-			if($mex && $mex = strtolower($mex) && $return =  $this->configMessage[$mex]){
+			if($mex && $mex = strtolower($mex) && @$return =  $this->configMessage[$mex]){
 				
 			}
 			return $return;
@@ -90,7 +90,7 @@ if($message){
 				$sender = $mex->sender->id;
 				if($sender !== $idPage){
 					$messages = $mex->message->text;
-					$sendMessage = self::replyMessage($messages);
+					$sendMessage = $bot->replyMessage($messages);
 					if($sendMessage){
 						$bot->sendTextMessage($sender,$sendMessage);
 					}
