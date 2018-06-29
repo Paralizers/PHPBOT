@@ -118,8 +118,8 @@ if($message){
 				$sender = $mex->sender->id;
 				if($sender !== $idPage){
 					if($mex->postback){
-						$playback = @$mex->postback->playback;
-						$bot->replyMessage($playback);
+						$payload = @$mex->postback->payload;
+						$bot->replyMessage($payload);
 					}
 					else if($mex->message){
 						$messages = $mex->message->text;
