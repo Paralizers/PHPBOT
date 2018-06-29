@@ -20,7 +20,6 @@
 		public function returnMessage(){
 			$return = null;
 			try{
-				
 				$return = json_decode(file_get_contents("php://input"), false);
 			}
 			catch(PDOException $e){
@@ -78,29 +77,6 @@
 $bot = new botFacebook("test1234","EAAYG4kbMNqcBAOqEVyquknrTpudyahcvs2onRQDegDR0VHaSGf04qktv7M1ZAglPlI76SpVCmxnc7mnuWQO26tYZB16HFJZBaxdxASnYSwUPlWcIZCsYVdAvywqaBD0gFBh1zJYiks7P9M6vZA9kxPpPcf2G4t7ywOXPMOqYPZCwZDZD");
 $message = $bot->returnMessage();
 if($message){
-	
-	try{
-	if($message->object == "page"){
-		$entry = $message->entry;
-		foreach($entry as $en){
-			$idPage = $en->id;
-			$mexs = $en->messaging;
-			foreach($mexs as $mex){
-				$sender = $mex->sender->id;
-				if($sender !== $idPage){
-					$messages = $mex->message->text;
-					if($messages)file_put_contents("test.txt",json_encode($message));
-					$sendMessage = self::replyMessage($messages);
-					if($sendMessage){
-						$bot->sendTextMessage($sender,$sendMessage);
-					}
-				}
-			}
-		}
-		
-	}
-	}catch(Exception $e){
-		file_put_contents("error.log",$e);
-	}
+	file_put_contents("test.txt",json_encode($message));
 	
 }
