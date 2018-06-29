@@ -2,7 +2,19 @@
 
 	class botFacebook{
 		const BASE_URL_APIFB = 'https://graph.facebook.com/v2.6/';
-		private $configMessage = ['test' => "Ciao"];
+		private $configMessage = ['prova' => function(){
+			$url = self::BASE_URL_APIFB . "me/messages?access_token=%s";
+			
+			$url = sprintf($url, $this->pageToken);
+			$parameters = [];
+			$parameters["recipient"]["id"] = $this->recipientId;
+			$parameters["message"]["attachment"]["type"] = "template";
+			$parameters["message"]["attachment"]["payload"]["template_type"] = "button";
+			$parameters["message"]["attachment"]["payload"]["text"] = "Prova";
+			$parameters["message"]["attachment"]["payload"]["buttons"] = [];
+			$parameters["message"]["attachment"]["payload"]["buttons"][] = ["type" => "web_url","url" => "https://www.relaxtraveltours.com/","title" => "Visita il sito"];
+		},
+		'sito' => "Al seguente indirizzo: https://www.relaxtraveltours.com/ , potrai trovare il nostro sito web."];
 		private $valToken;
 		private $pageToken;
 		public function __construct($val,$page){
@@ -31,7 +43,7 @@
 		
 		public function replyMessage($mex){
 			$return = null;
-			if($mex && $mex = strtolower($mex) && @$return =  $this->configMessage[$mex]){
+			if($mex && $mex = strtolower($mex) && @$return = $this->configMessage[$mex] && ! is_callable($return)){
 				
 			}
 			return $return;
@@ -77,9 +89,6 @@
 $bot = new botFacebook("test1234","EAAYG4kbMNqcBAOqEVyquknrTpudyahcvs2onRQDegDR0VHaSGf04qktv7M1ZAglPlI76SpVCmxnc7mnuWQO26tYZB16HFJZBaxdxASnYSwUPlWcIZCsYVdAvywqaBD0gFBh1zJYiks7P9M6vZA9kxPpPcf2G4t7ywOXPMOqYPZCwZDZD");
 $message = $bot->returnMessage();
 if($message){
-	file_put_contents("test.txt","
-
-".json_encode($message),FILE_APPEND);
 	try{
 	if($message->object == "page"){
 		$entry = $message->entry;
@@ -90,6 +99,7 @@ if($message){
 				$sender = $mex->sender->id;
 				if($sender !== $idPage){
 					$messages = $mex->message->text;
+					$this->recipientId = $sender;
 					$sendMessage = $bot->replyMessage($messages);
 					if($sendMessage){
 						$bot->sendTextMessage($sender,$sendMessage);
@@ -102,7 +112,4 @@ if($message){
 	}catch(Exception $e){
 		file_put_contents("error.log",$e);
 	}
-	file_put_contents("test.txt","
-
-".json_encode($message),FILE_APPEND);
 }
