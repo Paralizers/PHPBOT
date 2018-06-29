@@ -2,7 +2,12 @@
 
 	class botFacebook{
 		const BASE_URL_APIFB = 'https://graph.facebook.com/v2.6/';
-		private $configMessage = ['prova' => function(){
+		private $configMessage =  array(
+		'sito' => "Al seguente indirizzo: https://www.relaxtraveltours.com/ , potrai trovare il nostro sito web.");
+		private $valToken;
+		private $pageToken;
+		public function __construct($val,$page){
+			$this->configMessage['prova'] = function(){
 			$url = self::BASE_URL_APIFB . "me/messages?access_token=%s";
 			
 			$url = sprintf($url, $this->pageToken);
@@ -13,11 +18,8 @@
 			$parameters["message"]["attachment"]["payload"]["text"] = "Prova";
 			$parameters["message"]["attachment"]["payload"]["buttons"] = [];
 			$parameters["message"]["attachment"]["payload"]["buttons"][] = ["type" => "web_url","url" => "https://www.relaxtraveltours.com/","title" => "Visita il sito"];
-		},
-		'sito' => "Al seguente indirizzo: https://www.relaxtraveltours.com/ , potrai trovare il nostro sito web."];
-		private $valToken;
-		private $pageToken;
-		public function __construct($val,$page){
+			self::executePost($url,$parameters);
+		};
 			$this->valToken = $val;
 			$this->pageToken = $page;
 			self::setupWebhook();
