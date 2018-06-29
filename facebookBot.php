@@ -56,7 +56,7 @@ error_reporting(E_ERROR);
 		}
 		
 		public function sendTextMessage($recipientId, $text){
-			$url = self::BASE_URL . "me/messages?access_token=%s";
+			$url = self::BASE_URL_APIFB . "me/messages?access_token=%s";
 			$url = sprintf($url, $this->pageToken);
 			$recipient = new \stdClass();
 			$recipient->id = $recipientId;
