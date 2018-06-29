@@ -7,10 +7,19 @@ error_reporting(E_ERROR);
 		public function __construct($val,$page){
 			$this->valToken = $val;
 			$this->pageToken = $page;
+			self::setupWebhook();
 		}
+		private function setupWebhook()
+			{
+				if (isset($_REQUEST['hub_challenge']) && isset($_REQUEST['hub_verify_token']) && $this->valToken == $_REQUEST['hub_verify_token']) {
+					echo $_REQUEST['hub_challenge'];
+					exit;
+				}
+			}
 		public function returnBot(){
 			return file_get_contents("php://input");
 		}
 	}
 $a = new botFacebook();
+
 file_put_contents("test.txt",$a->returnBot());
