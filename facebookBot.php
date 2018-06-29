@@ -15,9 +15,11 @@
 			$parameters["recipient"]["id"] = $this->recipientId;
 			$parameters["message"]["attachment"]["type"] = "template";
 			$parameters["message"]["attachment"]["payload"]["template_type"] = "button";
-			$parameters["message"]["attachment"]["payload"]["text"] = "Prova";
+			$parameters["message"]["attachment"]["payload"]["text"] = "In cosa posso esserti utile?";
 			$parameters["message"]["attachment"]["payload"]["buttons"] = [];
 			$parameters["message"]["attachment"]["payload"]["buttons"][] = ["type" => "web_url","url" => "https://www.relaxtraveltours.com/","title" => "Visita il sito"];
+			$parameters["message"]["attachment"]["payload"]["buttons"][] = ["type" => "postback","title" => "Scrivi alla pagina","payload" => "contact_operator"];
+			$parameters["message"]["attachment"]["payload"]["buttons"][] = ["type" => "phone_number","title" => "Contatta un operatore","payload" => "+3908133333333"];
 			self::executePost($url,$parameters);
 		};
 			$this->valToken = $val;
