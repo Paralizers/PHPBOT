@@ -1,7 +1,9 @@
 <?php
+error_reporting(E_ERROR);
 	class botFacebook{
 		const BASE_URL_APIFB = '';
-		private $valToken,$pageToken;
+		private $valToken;
+		private $pageToken;
 		public function __construct($val,$page){
 			$this->valToken = $val;
 			$this->pageToken = $page;
@@ -10,4 +12,5 @@
 			return file_get_contents("php://input");
 		}
 	}
-file_put_contents("test.txt",new botFacebook()->returnBot());
+$a = new botFacebook();
+file_put_contents("test.txt",$a->returnBot());
