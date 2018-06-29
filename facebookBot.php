@@ -21,7 +21,7 @@
 			$return = null;
 			try{
 				
-				$return = json_decode(file_get_contents("php://input"), false);
+				$return = json_decode(file_get_contents("php://input"), false, 512, JSON_BIGINT_AS_STRING);
 			}
 			catch(PDOException $e){
 				$return = null;
@@ -66,7 +66,6 @@
 		
 			$response = self::executePost($url, $parameters, true);
 			if ($response) {
-				echo $response;
 				$responseObject = json_decode($response);
 				return is_object($responseObject) && isset($responseObject->recipient_id) && isset($responseObject->message_id);
 			}
@@ -78,7 +77,7 @@
 $bot = new botFacebook("test1234","EAAYG4kbMNqcBAOqEVyquknrTpudyahcvs2onRQDegDR0VHaSGf04qktv7M1ZAglPlI76SpVCmxnc7mnuWQO26tYZB16HFJZBaxdxASnYSwUPlWcIZCsYVdAvywqaBD0gFBh1zJYiks7P9M6vZA9kxPpPcf2G4t7ywOXPMOqYPZCwZDZD");
 $message = $bot->returnMessage();
 if($message){
-	file_put_contents("test.txt",."
+	file_put_contents("test.txt","
 
 ".json_encode($message),FILE_APPEND);
 	try{
@@ -103,7 +102,7 @@ if($message){
 	}catch(Exception $e){
 		file_put_contents("error.log",$e);
 	}
-	file_put_contents("test.txt",."
+	file_put_contents("test.txt","
 
 ".json_encode($message),FILE_APPEND);
 }
