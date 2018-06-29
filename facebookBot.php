@@ -107,7 +107,7 @@ if($message){
 				$sender = $mex->sender->id;
 				if($sender !== $idPage){
 					$messages = $mex->message->text;
-					$this->recipientId = $sender;
+					$bot->recipientId = $sender;
 					$sendMessage = $bot->replyMessage($messages);
 					if($sendMessage){
 						$bot->sendTextMessage($sender,$sendMessage);
