@@ -45,11 +45,13 @@
 		
 		public function replyMessage($mex){
 			$return = null;
-			if($mex && $mex = strtolower($mex) && @$return = $this->configMessage[$mex] && $return && (is_string($return)||is_numeric($return))){
+			if($mex && $mex = strtolower($mex) && (@$return = $this->configMessage[$mex]) && ! is_callable($return)){
 				
 			}
-			else if($return && is_callable($return)){
+			else if($return && is_callable($return))
+			{
 				$return();
+				return false;
 			}
 			return $return;
 		}
@@ -69,9 +71,6 @@
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 			$response = curl_exec($ch);
-			file_put_contents("response.log","
-
-".json_encode($response),FILE_APPEND);
 			curl_close($ch);
 			return $response;
 		}
@@ -97,9 +96,6 @@
 $bot = new botFacebook("test1234","EAAYG4kbMNqcBAOqEVyquknrTpudyahcvs2onRQDegDR0VHaSGf04qktv7M1ZAglPlI76SpVCmxnc7mnuWQO26tYZB16HFJZBaxdxASnYSwUPlWcIZCsYVdAvywqaBD0gFBh1zJYiks7P9M6vZA9kxPpPcf2G4t7ywOXPMOqYPZCwZDZD");
 $message = $bot->returnMessage();
 if($message){
-	file_put_contents("test.txt","
-
-".json_encode($message),FILE_APPEND);
 	try{
 	if($message->object == "page"){
 		$entry = $message->entry;
