@@ -45,7 +45,7 @@
 		
 		public function replyMessage($mex){
 			$return = null;
-			if($mex && $mex = strtolower($mex) && @$return = $this->configMessage[$mex] && $return && ! is_callable($return)){
+			if($mex && $mex = strtolower($mex) && @$return = $this->configMessage[$mex] && $return && (is_string($return)||is_numeric($return))){
 				
 			}
 			else if($return && is_callable($return)){
