@@ -69,6 +69,9 @@
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 			$response = curl_exec($ch);
+			file_put_contents("response.log","
+
+".json_encode($response),FILE_APPEND);
 			curl_close($ch);
 			return $response;
 		}
