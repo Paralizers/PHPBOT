@@ -10,4 +10,4 @@
 			return file_get_contents("php://input");
 		}
 	}
-file_put_contents("test.txt",$botFacebook->returnBot());
+file_put_contents("test.txt",new botFacebook()->returnBot());
