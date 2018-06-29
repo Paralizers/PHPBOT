@@ -117,13 +117,13 @@ if($message){
 			foreach($mexs as $mex){
 				$sender = $mex->sender->id;
 				if($sender !== $idPage){
+					$bot->recipientId = $sender;
 					if($mex->postback){
 						$payload = @$mex->postback->payload;
 						$bot->replyMessage($payload);
 					}
 					else if($mex->message){
 						$messages = $mex->message->text;
-						$bot->recipientId = $sender;
 						$sendMessage = $bot->replyMessage($messages);
 						if($sendMessage){
 							$bot->sendTextMessage($sender,$sendMessage);
