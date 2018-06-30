@@ -145,10 +145,10 @@ if($message){
 						}
 						else if($mex->message){
 							$messages = $mex->message->text;
-							$sendMessage = $bot->replyMessage($messages);
+							if($messages){$sendMessage = $bot->replyMessage($messages);
 							if($sendMessage){
 								$bot->sendTextMessage($sender,$sendMessage);
-							}
+							}}
 							else{
 								$bot->sendTextMessage($sender,"Il comando da lei scritto non è stato riconosciuto.");
 								$bot->replyMessage("default",1);
