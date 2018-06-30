@@ -10,7 +10,7 @@
 			$this->configMessage["command"]['default'] = function($nomex = null){
 				$url = self::BASE_URL_APIFB . "me/messages?access_token=%s";
 				$url = sprintf($url, $this->pageToken);
-				self::sendTextMessage($this->recipientId,($nomex ? null : "In cosa posso esserti utile?"),[
+				self::sendTextMessage($this->recipientId, "In cosa posso esserti utile?",[
 					["type" => "web_url","url" => "https://www.relaxtraveltours.com/","title" => "Visita il sito"],
 					["type" => "postback","title" => "Scrivi alla pagina","payload" => "contact_operator"],
 					["type" => "phone_number","title" => "Chiama operatore","payload" => "+3908133333333"]
@@ -28,8 +28,12 @@
 			
 			$this->configMessage["command"]['reactive_bot'] = function(){
 				if(! $this->user["contact_operator"]) return false;
-				self::sendTextMessage($this->recipientId,"Mi hai riattivato ora dimmi, in cosa posso esserti utile?");
-				$this->configMessage["command"]['default'](1);
+				self::sendTextMessage($this->recipientId,"Mi hai riattivato ora dimmi, in cosa posso esserti utile?",[
+					["type" => "web_url","url" => "https://www.relaxtraveltours.com/","title" => "Visita il sito"],
+					["type" => "postback","title" => "Scrivi alla pagina","payload" => "contact_operator"],
+					["type" => "phone_number","title" => "Chiama operatore","payload" => "+3908133333333"]
+				]);
+				
 			};
 			
 			$this->valToken = $val;
