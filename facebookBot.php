@@ -10,19 +10,15 @@
 			$this->configMessage["command"]['default'] = function(){
 				$url = self::BASE_URL_APIFB . "me/messages?access_token=%s";
 				$url = sprintf($url, $this->pageToken);
-				$parameters = [];
-				$parameters["recipient"]["id"] = $this->recipientId;
-				$parameters["message"]["attachment"]["type"] = "template";
-				$parameters["message"]["attachment"]["payload"]["template_type"] = "button";
-				$parameters["message"]["attachment"]["payload"]["text"] = "In cosa posso esserti utile?";
-				$parameters["message"]["attachment"]["payload"]["buttons"] = [];
-				$parameters["message"]["attachment"]["payload"]["buttons"][] = ["type" => "web_url","url" => "https://www.relaxtraveltours.com/","title" => "Visita il sito"];
-				$parameters["message"]["attachment"]["payload"]["buttons"][] = ["type" => "postback","title" => "Scrivi alla pagina","payload" => "contact_operator"];
-				$parameters["message"]["attachment"]["payload"]["buttons"][] = ["type" => "phone_number","title" => "Chiama operatore","payload" => "+3908133333333"];
-				self::executePost($url,$parameters);
+				sendTextMessage($this->recipientId,"In cosa posso esserti utile?",[
+					["type" => "web_url","url" => "https://www.relaxtraveltours.com/","title" => "Visita il sito"],
+					["type" => "postback","title" => "Scrivi alla pagina","payload" => "contact_operator"],
+					["type" => "phone_number","title" => "Chiama operatore","payload" => "+3908133333333"]
+				]);
 			};
 			
 			$this->configMessage["command"]['contact_operator'] = function(){
+				if($this->user["contact_operator"])return false;
 				$this->user["contact_operator"] = true;
 				self::getUsers($this->recipientId,$this->user);
 				self::sendTextMessage($this->recipientId, "Il bot è stato disattivato, un operatore ti contatterà il prima possibile");
@@ -109,14 +105,19 @@
 			return $response;
 		}
 		
-		public function sendTextMessage($recipientId, $text){
+		public function sendTextMessage($recipientId, $text,$buttons = null){
 			$url = self::BASE_URL_APIFB . "me/messages?access_token=%s";
 			
 			$url = sprintf($url, $this->pageToken);
 			$parameters = [];
 			$parameters["recipient"]["id"] = $recipientId;
-			$parameters["message"]["text"] = $text;
-		
+			if($buttons == null || ! is_array($buttons)){$parameters["message"]["text"] = $text;}
+			else{
+				$parameters["message"]["attachment"]["type"] = "template";
+				$parameters["message"]["attachment"]["payload"]["template_type"] = "button";
+				$parameters["message"]["attachment"]["payload"]["text"] = $text;
+				$parameters["message"]["attachment"]["payload"]["buttons"] = $buttons;
+			}
 			$response = self::executePost($url, $parameters, true);
 			if ($response) {
 				$responseObject = json_decode($response);
@@ -152,7 +153,6 @@ if($message){
 								if($userImp["contact_operator"] == false){
 									if($userImp["first_time"]){
 										$bot->replyMessage("default",1);
-										
 									}else{
 										$sendMessage = $bot->replyMessage($messages);
 										if($sendMessage){
