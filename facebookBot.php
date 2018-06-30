@@ -38,10 +38,21 @@
 		public function getUsers ($id,$save = null){
 			$return = [];
 			$nameFile = $id."_fb.json";
-			if($save === null){if($existFIle = file_exists($nameFile))$return = json_decode(file_get_contents($nameFile),true);
-			$return["last_access"] = time();
-			if(! $existFIle)$return["contact_operator"] = false;
-			if(! $existFIle){$return["first_time"] = true;}else{$return["first_time"] = false;}}
+			file_put_contents("log.txt",file_get_contents("log.txt")."
+"$nameFile);
+			if($save === null){
+				if(($existFIle = file_exists($nameFile)) && $existFIle){
+					$return = json_decode(file_get_contents($nameFile),true);
+				}
+				$return["last_access"] = time();
+				if(! $existFIle){
+					$return["contact_operator"] = false;
+					$return["first_time"] = true;
+				}
+				else{
+					$return["first_time"] = false;
+				}
+			}
 			else if($save && is_array($save)){
 				$return = $save;
 			}
@@ -138,23 +149,26 @@ if($message){
 ".$idPage."-".$sender,FILE_APPEND);
 						$bot->recipientId = $sender;
 						$userImp = $bot->getUsers($sender);
-						if($userImp["first_time"]){
-							$bot->replyMessage("default",1);
-						}
-						else if($mex->postback){
+						
+						if($mex->postback){
 							$payload = @$mex->postback->payload;
 							$bot->replyMessage($payload,1);
 						}
 						else if($mex->message){
 							$messages = $mex->message->text;
 							if($messages){
-								$sendMessage = $bot->replyMessage($messages);
-								if($sendMessage){
-									$bot->sendTextMessage($sender,$sendMessage);
-								}
-								else{
-									$bot->sendTextMessage($sender,"Il comando da lei scritto non è stato riconosciuto.");
+								if($userImp["first_time"]){
 									$bot->replyMessage("default",1);
+									
+								}else{
+									$sendMessage = $bot->replyMessage($messages);
+									if($sendMessage){
+										$bot->sendTextMessage($sender,$sendMessage);
+									}
+									else{
+										$bot->sendTextMessage($sender,"Il comando da lei scritto non è stato riconosciuto.");
+										$bot->replyMessage("default",1);
+									}
 								}
 							}
 						}
