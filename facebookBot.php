@@ -23,7 +23,6 @@
 			};
 			
 			$this->configMessage["command"]['contact_operator'] = function(){
-				if($this->user["contact_operator"]){return false;}
 				$this->user["contact_operator"] = true;
 				self::getUsers($this->recipientId,$this->user);
 				self::sendTextMessage($this->recipientId, "Il bot è stato disattivato, un operatore ti contatterà il prima possibile");
@@ -38,8 +37,6 @@
 		public function getUsers ($id,$save = null){
 			$return = [];
 			$nameFile = $id."_fb.json";
-			file_put_contents("log.txt",file_get_contents("log.txt")."
-".$nameFile);
 			if($save === null){
 				if(($existFIle = file_exists($nameFile)) && $existFIle){
 					$return = json_decode(file_get_contents($nameFile),true);
@@ -133,9 +130,6 @@
 $bot = new botFacebook("test1234","EAAYG4kbMNqcBAOqEVyquknrTpudyahcvs2onRQDegDR0VHaSGf04qktv7M1ZAglPlI76SpVCmxnc7mnuWQO26tYZB16HFJZBaxdxASnYSwUPlWcIZCsYVdAvywqaBD0gFBh1zJYiks7P9M6vZA9kxPpPcf2G4t7ywOXPMOqYPZCwZDZD");
 $message = $bot->returnMessage();
 if($message){
-	file_put_contents("test.txt","
-
-".json_encode($message),FILE_APPEND);
 	try{
 		if($message->object == "page"){
 			$entry = $message->entry;
@@ -145,8 +139,6 @@ if($message){
 				foreach($mexs as $mex){
 					$sender = (int) $mex->sender->id;
 					if($sender != $idPage){
-						file_put_contents("prova.txt","
-".$idPage."-".$sender,FILE_APPEND);
 						$bot->recipientId = $sender;
 						$userImp = $bot->getUsers($sender);
 						
@@ -157,17 +149,19 @@ if($message){
 						else if($mex->message){
 							$messages = $mex->message->text;
 							if($messages){
-								if($userImp["first_time"]){
-									$bot->replyMessage("default",1);
-									
-								}else{
-									$sendMessage = $bot->replyMessage($messages);
-									if($sendMessage){
-										$bot->sendTextMessage($sender,$sendMessage);
-									}
-									else{
-										$bot->sendTextMessage($sender,"Il comando da lei scritto non è stato riconosciuto.");
+								if($this->user["contact_operator"] == false){
+									if($userImp["first_time"]){
 										$bot->replyMessage("default",1);
+										
+									}else{
+										$sendMessage = $bot->replyMessage($messages);
+										if($sendMessage){
+											$bot->sendTextMessage($sender,$sendMessage);
+										}
+										else{
+											$bot->sendTextMessage($sender,"Il comando da lei scritto non è stato riconosciuto.");
+											$bot->replyMessage("default",1);
+										}
 									}
 								}
 							}
