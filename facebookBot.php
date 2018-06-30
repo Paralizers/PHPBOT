@@ -7,10 +7,10 @@
 		private $pageToken;
 		
 		public function __construct($val,$page){
-			$this->configMessage["command"]['default'] = function(){
+			$this->configMessage["command"]['default'] = function($nomex = null){
 				$url = self::BASE_URL_APIFB . "me/messages?access_token=%s";
 				$url = sprintf($url, $this->pageToken);
-				self::sendTextMessage($this->recipientId,"In cosa posso esserti utile?",[
+				self::sendTextMessage($this->recipientId,($nomex ? null : "In cosa posso esserti utile?"),[
 					["type" => "web_url","url" => "https://www.relaxtraveltours.com/","title" => "Visita il sito"],
 					["type" => "postback","title" => "Scrivi alla pagina","payload" => "contact_operator"],
 					["type" => "phone_number","title" => "Chiama operatore","payload" => "+3908133333333"]
@@ -21,7 +21,15 @@
 				if($this->user["contact_operator"])return false;
 				$this->user["contact_operator"] = true;
 				self::getUsers($this->recipientId,$this->user);
-				self::sendTextMessage($this->recipientId, "Il bot è stato disattivato, un operatore ti contatterà il prima possibile");
+				self::sendTextMessage($this->recipientId,"Il bot è stato disattivato, un operatore ti contatterà il prima possibile",[
+					["type" => "postback","title" => "Riattiva Bot","payload" => "reactive_bot"]
+				]);
+			};
+			
+			$this->configMessage["command"]['reactive_bot'] = function(){
+				if(! $this->user["contact_operator"]) return false;
+				self::sendTextMessage($this->recipientId,"Mi hai riattivato ora dimmi, in cosa posso esserti utile?");
+				$this->configMessage["command"]['default'](1);
 			};
 			
 			$this->valToken = $val;
@@ -131,9 +139,6 @@
 $bot = new botFacebook("test1234","EAAYG4kbMNqcBAOqEVyquknrTpudyahcvs2onRQDegDR0VHaSGf04qktv7M1ZAglPlI76SpVCmxnc7mnuWQO26tYZB16HFJZBaxdxASnYSwUPlWcIZCsYVdAvywqaBD0gFBh1zJYiks7P9M6vZA9kxPpPcf2G4t7ywOXPMOqYPZCwZDZD");
 $message = $bot->returnMessage();
 if($message){
-		file_put_contents("test.txt","
-
-".json_encode($message),FILE_APPEND);
 	try{
 		if($message->object == "page"){
 			$entry = $message->entry;
