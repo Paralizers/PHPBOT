@@ -38,9 +38,9 @@
 		public function getUsers ($id,$save = null){
 			$return = [];
 			$nameFile = $id."_fb.json";
-			if(!$save){if($existFIle = file_exists($nameFile))$return = json_decode(file_get_contents($nameFile),true);
+			if($save === null){if($existFIle = file_exists($nameFile))$return = json_decode(file_get_contents($nameFile),true);
 			$return["last_access"] = time();
-			$return["contact_operator"] = false;
+			if(! $existFIle)$return["contact_operator"] = false;
 			if(! $existFIle){$return["first_time"] = true;}else{$return["first_time"] = false;}}
 			else if($save && is_array($save)){
 				$return = $save;
