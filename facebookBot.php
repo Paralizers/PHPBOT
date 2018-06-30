@@ -45,7 +45,7 @@
 			else if($save && is_array($save)){
 				$return = $save;
 			}
-			file_put_contents($nameFile,$return);
+			file_put_contents($nameFile,json_encode($return));
 			$this->user = $return;
 			return $return;
 		}
@@ -145,13 +145,15 @@ if($message){
 						}
 						else if($mex->message){
 							$messages = $mex->message->text;
-							if($messages){$sendMessage = $bot->replyMessage($messages);
-							if($sendMessage){
-								$bot->sendTextMessage($sender,$sendMessage);
-							}}
-							else{
-								$bot->sendTextMessage($sender,"Il comando da lei scritto non è stato riconosciuto.");
-								$bot->replyMessage("default",1);
+							if($messages){
+								$sendMessage = $bot->replyMessage($messages);
+								if($sendMessage){
+									$bot->sendTextMessage($sender,$sendMessage);
+								}
+								else{
+									$bot->sendTextMessage($sender,"Il comando da lei scritto non è stato riconosciuto.");
+									$bot->replyMessage("default",1);
+								}
 							}
 						}
 					}
