@@ -132,8 +132,8 @@ if($message){
 				$idPage = $en->id;
 				$mexs = $en->messaging;
 				foreach($mexs as $mex){
-					$sender = $mex->sender->id;
-					if($sender !== $idPage){
+					$sender = (int) $mex->sender->id;
+					if($sender != $idPage){
 						$bot->recipientId = $sender;
 						$userImp = $bot->getUsers($sender);
 						if($userImp["first_time"]){
