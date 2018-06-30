@@ -129,11 +129,13 @@ if($message){
 		if($message->object == "page"){
 			$entry = $message->entry;
 			foreach($entry as $en){
-				$idPage = $en->id;
+				$idPage = (int)$en->id;
 				$mexs = $en->messaging;
 				foreach($mexs as $mex){
 					$sender = (int) $mex->sender->id;
 					if($sender != $idPage){
+						file_put_contents("prova.txt","
+".$idPage."-".$sender,FILE_APPEND);
 						$bot->recipientId = $sender;
 						$userImp = $bot->getUsers($sender);
 						if($userImp["first_time"]){
