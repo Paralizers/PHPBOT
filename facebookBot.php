@@ -28,7 +28,9 @@
 			
 			$this->configMessage["command"]['reactive_bot'] = function(){
 				if(! $this->user["contact_operator"]) return false;
-				self::sendTextMessage($this->recipientId,"Mi hai riattivato ora dimmi, in cosa posso esserti utile?",[
+				$this->user["contact_operator"] = false;
+				self::getUsers($this->recipientId,$this->user);
+				self::sendTextMessage($this->recipientId,"Mi hai riattivato! Ora dimmi, in cosa posso esserti utile?",[
 					["type" => "web_url","url" => "https://www.relaxtraveltours.com/","title" => "Visita il sito"],
 					["type" => "postback","title" => "Scrivi alla pagina","payload" => "contact_operator"],
 					["type" => "phone_number","title" => "Chiama operatore","payload" => "+3908133333333"]
