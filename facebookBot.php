@@ -10,7 +10,7 @@
 			$this->configMessage["command"]['default'] = function(){
 				$url = self::BASE_URL_APIFB . "me/messages?access_token=%s";
 				$url = sprintf($url, $this->pageToken);
-				sendTextMessage($this->recipientId,"In cosa posso esserti utile?",[
+				self::sendTextMessage($this->recipientId,"In cosa posso esserti utile?",[
 					["type" => "web_url","url" => "https://www.relaxtraveltours.com/","title" => "Visita il sito"],
 					["type" => "postback","title" => "Scrivi alla pagina","payload" => "contact_operator"],
 					["type" => "phone_number","title" => "Chiama operatore","payload" => "+3908133333333"]
