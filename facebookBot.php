@@ -39,7 +39,7 @@
 			$return = [];
 			$nameFile = $id."_fb.json";
 			file_put_contents("log.txt",file_get_contents("log.txt")."
-"$nameFile);
+".$nameFile);
 			if($save === null){
 				if(($existFIle = file_exists($nameFile)) && $existFIle){
 					$return = json_decode(file_get_contents($nameFile),true);
