@@ -149,10 +149,10 @@ if($message){
 							if($sendMessage){
 								$bot->sendTextMessage($sender,$sendMessage);
 							}
-						}
-						else{
-							$bot->sendTextMessage($sender,"Il comando da lei scritto non è stato riconosciuto.");
-							$bot->replyMessage("default",1);
+							else{
+								$bot->sendTextMessage($sender,"Il comando da lei scritto non è stato riconosciuto.");
+								$bot->replyMessage("default",1);
+							}
 						}
 					}
 				}
