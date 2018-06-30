@@ -23,6 +23,7 @@
 			};
 			
 			$this->configMessage["command"]['contact_operator'] = function(){
+				if($this->user["contact_operator"]){return false;}
 				$this->user["contact_operator"] = true;
 				self::getUsers($this->recipientId,$this->user);
 				self::sendTextMessage($this->recipientId, "Il bot è stato disattivato, un operatore ti contatterà il prima possibile");
@@ -148,6 +149,10 @@ if($message){
 							if($sendMessage){
 								$bot->sendTextMessage($sender,$sendMessage);
 							}
+						}
+						else{
+							$bot->sendTextMessage($sender,"Il comando da lei scritto non è stato riconosciuto.");
+							$bot->replyMessage("default",1);
 						}
 					}
 				}
