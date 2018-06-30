@@ -149,7 +149,7 @@ if($message){
 						else if($mex->message){
 							$messages = $mex->message->text;
 							if($messages){
-								if($this->user["contact_operator"] == false){
+								if($userImp["contact_operator"] == false){
 									if($userImp["first_time"]){
 										$bot->replyMessage("default",1);
 										
