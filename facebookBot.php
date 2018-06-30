@@ -2,7 +2,7 @@
 
 	class botFacebook{
 		const BASE_URL_APIFB = 'https://graph.facebook.com/v2.6/';
-		private $configCommand = [];
+		private $configMessage = [];
 		private $valToken;
 		private $pageToken;
 		
